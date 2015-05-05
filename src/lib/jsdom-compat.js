@@ -98,7 +98,7 @@ if (utilsId) {
   };
 }
 
-var jsdom = require('jsdom');
+var jsdom = require('jsdom-nogyp');
 var elements = jsdom.defaultLevel;
 if (elements && elements.HTMLInputElement) {
   var proto = elements.HTMLInputElement.prototype;

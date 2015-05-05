@@ -11,7 +11,7 @@
     "harmonize": "~1.4.1",
     "jasmine-only": "0.1.0",
     "jasmine-pit": "~1.0.0",
-    "jsdom": "~0.10.3",
+    "jsdom-nogyp": "~0.8.3",
     "node-find-files": "~0.0.2",
     "node-haste": "^1.2.5",
     "node-worker-pool": "~2.4.0",

@@ -7,6 +7,7 @@
  */
 'use strict';
 
+var vm = require('vm');
 var FakeTimers = require('./lib/FakeTimers');
 
 function _deepCopy(obj) {
@@ -33,6 +34,7 @@ function JSDomEnvironment(config) {
 
   // Node's error-message stack size is limited at 10, but it's pretty useful to
   // see more than that when a test fails.
+  this.global.Error = Error;
   this.global.Error.stackTraceLimit = 100;
 
   // Setup defaults for navigator.onLine
@@ -53,6 +55,7 @@ function JSDomEnvironment(config) {
   this.global.DataView = DataView;
   this.global.Buffer = Buffer;
   this.global.process = process;
+  this.global.setImmediate = setImmediate;
 
   this.fakeTimers = new FakeTimers(this.global);
 
@@ -89,6 +92,9 @@ function JSDomEnvironment(config) {
     // Always deep-copy objects so isolated test environments can't share memory
     this.global[customGlobalKey] = globalValues[customGlobalKey];
   }
+
+  // Create a VM context
+  vm.createContext(this.global);
 }
 
 JSDomEnvironment.prototype.dispose = function() {
@@ -103,7 +109,7 @@ JSDomEnvironment.prototype.dispose = function() {
 };
 
 JSDomEnvironment.prototype.runSourceText = function(sourceText, fileName) {
-  return this.global.run(sourceText, fileName);
+  return vm.runInContext(sourceText, this.global, { filename: fileName });
 };
 
 JSDomEnvironment.prototype.runWithRealTimers = function(cb) {
