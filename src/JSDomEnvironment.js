@@ -88,8 +88,8 @@ function JSDomEnvironment(config) {
     this.global[customGlobalKey] = globalValues[customGlobalKey];
   }
 
-  // Create a VM context
-  vm.createContext(this.global);
+  // Contextualize our sandbox
+  this.global = vm.createContext(this.global);
 
   // Node's error-message stack size is limited at 10, but it's pretty useful to
   // see more than that when a test fails.
