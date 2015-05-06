@@ -32,11 +32,6 @@ function JSDomEnvironment(config) {
   // require()ing this when necessary.
   this.global = require('./lib/jsdom-compat').jsdom().parentWindow;
 
-  // Node's error-message stack size is limited at 10, but it's pretty useful to
-  // see more than that when a test fails.
-  this.global.Error = Error;
-  this.global.Error.stackTraceLimit = 100;
-
   // Setup defaults for navigator.onLine
   // TODO: It's questionable as to whether this should go here
   //       It's a pretty rarely depended on feature, so maybe tests that care
@@ -95,6 +90,10 @@ function JSDomEnvironment(config) {
 
   // Create a VM context
   vm.createContext(this.global);
+
+  // Node's error-message stack size is limited at 10, but it's pretty useful to
+  // see more than that when a test fails.
+  vm.runInContext('Error.stackTraceLimit = 100;', this.global);
 }
 
 JSDomEnvironment.prototype.dispose = function() {
