@@ -79,7 +79,11 @@ jasmine.bindOriginal_ = function(base, name) {
   }
 };
 
-jasmine.setTimeout = jasmine.bindOriginal_(jasmine.getGlobal(), 'setTimeout');
+// HACK... use the copy of setTimeout saved in the _setTimeout global as when
+// Jasmine is run inside a VM context Jest has alreaded replaced setTimeout
+// with a mock function
+jasmine.setTimeout = jasmine.bindOriginal_(jasmine.getGlobal(), '_setTimeout');
+
 jasmine.clearTimeout = jasmine.bindOriginal_(jasmine.getGlobal(), 'clearTimeout');
 jasmine.setInterval = jasmine.bindOriginal_(jasmine.getGlobal(), 'setInterval');
 jasmine.clearInterval = jasmine.bindOriginal_(jasmine.getGlobal(), 'clearInterval');

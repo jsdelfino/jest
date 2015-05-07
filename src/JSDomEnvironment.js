@@ -23,6 +23,12 @@ function _deepCopy(obj) {
   return newObj;
 }
 
+// HACK... save setTimeout in a global _setTimeout global variable which
+// Jasmine can then use to get the original setTimeout instead of Jest's
+// setTimeout mock, which confuses the hell out of Jasmine when it tries
+// to use setTimeout to run test blocks asynchronously... Pfewww...
+global._setTimeout = setTimeout;
+
 function JSDomEnvironment(config) {
   // We lazily require jsdom because it takes a good ~.5s to load.
   //
@@ -80,6 +86,9 @@ function JSDomEnvironment(config) {
   // TODO: Consider locking this down somehow so tests can't do crazy stuff to
   //       worker processes...
   this.global.process = process;
+
+  // Pass through our global _setTimeout
+  this.global._setTimeout = _setTimeout;
 
   // Apply any user-specified global vars
   var globalValues = _deepCopy(config.globals);
